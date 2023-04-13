@@ -1,0 +1,10 @@
+.vs/
+*.sln
+x64/
+Miner/x64/
+Miner/*.vcxproj
+Miner/*.vcxproj.user
+Miner/*.vcxproj.filters
+Miner/*.vcxproj.resx
+
+
