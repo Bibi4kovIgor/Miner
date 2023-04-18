@@ -1,5 +1,4 @@
 #pragma once
-
 namespace $safeprojectname$ {
 
 	using namespace System;
@@ -92,6 +91,7 @@ namespace $safeprojectname$ {
 			this->pictureBox1->TabIndex = 0;
 			this->pictureBox1->TabStop = false;
 			this->pictureBox1->Paint += gcnew System::Windows::Forms::PaintEventHandler(this, &MyForm::pictureBox1_Paint);
+			this->pictureBox1->MouseClick += gcnew System::Windows::Forms::MouseEventHandler(this, &MyForm::pictureBox1_MouseClick);
 			// 
 			// MyForm
 			// 
@@ -115,7 +115,6 @@ namespace $safeprojectname$ {
 	private: System::Void pictureBox1_Paint(System::Object^ sender, System::Windows::Forms::PaintEventArgs^ e) {
 		DrawField(e->Graphics);
 		pictureBox1->Refresh();
-
 	}
 
 	private: System::Void MyForm_Resize(System::Object^ sender, System::EventArgs^ e) {
@@ -124,5 +123,11 @@ namespace $safeprojectname$ {
 		pictureBox1->Refresh();
 
 	}
-	};
+	private: System::Void pictureBox1_MouseClick(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
+
+		//this->Text = e->X + " " + e->Y;
+		
+		
+	}
+};
 }
