@@ -1,3 +1,4 @@
+#include<cmath>
 #include "MyForm.h"
 
 using namespace System;

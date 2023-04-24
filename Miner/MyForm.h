@@ -19,9 +19,7 @@ namespace $safeprojectname$ {
 		MyForm(void)
 		{
 			InitializeComponent();
-			//
-			//TODO: Add the constructor code here
-			//
+			//graphics = pictureBox1->CreateGraphics();
 		}
 
 	protected:
@@ -35,8 +33,14 @@ namespace $safeprojectname$ {
 				delete components;
 			}
 		}
-	private: System::Windows::Forms::PictureBox^ pictureBox1;
-		   const float BORDER = 20;
+	private: 
+		System::Windows::Forms::PictureBox^ pictureBox1;
+		const float BORDER = 20;
+		const float FIELD_SIZE = 8;
+		const float FIELD_LINE_THICKNESS = 1;
+		float cellWidth;
+		float cellHeight;
+		//Graphics^ graphics;
 	protected:
 
 	private:
@@ -45,7 +49,7 @@ namespace $safeprojectname$ {
 		void DrawField(Graphics^ graphics) {
 
 			Pen^ pen = gcnew Pen(Color::Black);
-			pen->Width = 1;
+			pen->Width = FIELD_LINE_THICKNESS;
 
 			float width = pictureBox1->Width - 2 *  BORDER;
 			float height = pictureBox1->Height -2 *  BORDER;
@@ -55,20 +59,26 @@ namespace $safeprojectname$ {
 
 			graphics->DrawRectangle(pen, *rectangle);
 
-			float cellWidth = width / 8;
-			float cellHeight = height / 8;
+			cellWidth = width / FIELD_SIZE;
+			cellHeight = height / FIELD_SIZE;
 
 			float cellProgressWidth = BORDER;
-			for (float i = 0; i < 7; i++) {
+			for (float i = 0; i < FIELD_SIZE - 1; i++) {
 				cellProgressWidth += cellWidth;
 				graphics->DrawLine(pen, cellProgressWidth, BORDER, cellProgressWidth, height + BORDER);
 			}
 
 			float cellProgressHeight = BORDER;
-			for (float i = 0; i < 7; i++) {
+			for (float i = 0; i < FIELD_SIZE - 1; i++) {
 				cellProgressHeight += cellHeight;
 				graphics->DrawLine(pen, BORDER, cellProgressHeight, width + BORDER, cellProgressHeight);
 			}
+		}
+
+		void FillBackgroundField(float leftCornerCoordinateX, float y) {
+			Graphics^ graphics = pictureBox1->CreateGraphics();
+			SolidBrush^ solidBrush = gcnew SolidBrush(Color::Red);
+			graphics->FillRectangle(solidBrush, leftCornerCoordinateX, y, cellWidth, cellHeight);
 		}
 
 
@@ -113,8 +123,8 @@ namespace $safeprojectname$ {
 		pictureBox1->Height = this->Height - 2 * BORDER;
 	}
 	private: System::Void pictureBox1_Paint(System::Object^ sender, System::Windows::Forms::PaintEventArgs^ e) {
-		DrawField(e->Graphics);
-		pictureBox1->Refresh();
+		Graphics^ graphics = e->Graphics;
+		DrawField(graphics);
 	}
 
 	private: System::Void MyForm_Resize(System::Object^ sender, System::EventArgs^ e) {
@@ -123,11 +133,20 @@ namespace $safeprojectname$ {
 		pictureBox1->Refresh();
 
 	}
-	private: System::Void pictureBox1_MouseClick(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
 
-		//this->Text = e->X + " " + e->Y;
-		
-		
+
+	private: System::Void pictureBox1_MouseClick(System::Object^ sender, System::Windows::Forms::MouseEventArgs^ e) {
+		float cellNumberX = trunc((e->X - BORDER) / cellWidth + 1);
+		float cellNumberY = trunc((e->Y - BORDER) / cellHeight + 1);
+		if (cellNumberX > 0 && cellNumberX < FIELD_SIZE + 1 && cellNumberY> 0 && cellNumberY < FIELD_SIZE + 1) {
+			cellNumberX--;
+			cellNumberY--;
+		}
+		float leftCornerX = cellNumberX * cellWidth - cellNumberX + BORDER + cellNumberX * FIELD_LINE_THICKNESS;
+		float leftCornerY = cellNumberY * cellHeight - cellNumberY + BORDER + +cellNumberY * FIELD_LINE_THICKNESS;
+		FillBackgroundField(leftCornerX, leftCornerY);
+		/*MessageBox::Show(cellCoordX + "; " + cellCoordY);*/
+
 	}
 };
 }
